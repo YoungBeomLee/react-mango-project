@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProductPage.css";
 import dayjs from "dayjs";
+import {API_URL} from "./config/constants.js";
 
 
 const ProductPage = function () {
@@ -11,9 +12,9 @@ const ProductPage = function () {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    let url = `http://127.0.0.1:8080/products/${id}`;
+    
     axios
-      .get(url)
+    .get(`${API_URL}/products/${id}`)
       .then(function (result) {
         setProduct(result.data.product);
       })
