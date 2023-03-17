@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ProductPage.css";
+import dayjs from "dayjs";
+
 
 const ProductPage = function () {
   const { id } = useParams();
@@ -9,11 +11,11 @@ const ProductPage = function () {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    let url = `https://3bc46ad5-572a-4035-8a91-1e328895a799.mock.pstmn.io/products/${id}`;
+    let url = `http://127.0.0.1:8080/products/${id}`;
     axios
       .get(url)
       .then(function (result) {
-        setProduct(result.data);
+        setProduct(result.data.product);
       })
       .catch(function (error) {
         console.log(error);
@@ -48,11 +50,14 @@ const ProductPage = function () {
         <span className="product-seller">{product.seller}</span>
       </div>
 
-      <div className="content-box">
-        <div id="name">{product.name}</div>
-        <div id="price">{product.price}</div>
-        <div id="createAt">2023.03.10</div>
-        <div id="description">{product.desc}</div>
+      <div class="product-footer">
+        <div className="content-box">
+          <div id="name">{product.name}</div>
+          <div id="price">{product.price}</div>
+          <div id="createAt">2023.03.10</div>
+          <div id="description">{product.desc}</div>
+          <span className="product-date">{dayjs(product.createdAt).format("YY년MM월DD일:HH시MM분ss초")}</span>
+      </div>
       </div>
     </div>
   );
