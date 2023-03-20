@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "./config/constants.js";
 import axios from "axios";
-import { Button, Checkbox, ConfigProvider, Form, Input, Upload, Divider, InputNumber, Textarea } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Button,  ConfigProvider, Form, Input, Upload, Divider, InputNumber, Textarea, message, Space } from "antd";
+import { useNavigate, Navigate } from "react-router-dom";
 import "./UploadPage.css";
+
 
 const { TextArea } = Input;
 
 const UploadPage = function () {
-  const [imageUrl, setImageUrl] = React.useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [messageApi, contextHolder] = message.useMessage();
+  const navigate=useNavigate();
+  const info = () => {
+    messageApi.info('Hello, Ant Design!');
+  };
   const onFinish = function (val) {
     console.log(val);
     axios
@@ -17,11 +23,16 @@ const UploadPage = function () {
         description: val.description,
         seller: val.seller,
         price: parseInt(val.price),
-        imageUrl: imageUrl,
+        imageUrl:imageUrl,
       })
       .then((result) => {
         console.log(result);
+        navigate('/',{ replace : true});
       })
+      .catch((error) => {
+				console.error(error);
+        message.error(`에러가 발생했습니다 ${error.message}`)
+			});
      
   };
   const onChangeImage = function (info) {
@@ -53,7 +64,7 @@ const UploadPage = function () {
           </Form.Item>
           <Divider></Divider>
           <Form.Item label={<span className="upload-label">판매자명</span>} name="seller" rules={[{ required: true, message: "판매자명 입력은 필수사항입니다." }]}>
-            <Input className="upload-name" placeholder="판매자명을 입력해주세요" size="large" />
+            <Input className="upload-seller" placeholder="판매자명을 입력해주세요" size="large" />
           </Form.Item>
 
           <Form.Item label={<span className="upload-label">상품명</span>} name="name" rules={[{ required: true, message: "상품명 입력은 필수사항입니다." }]}>
@@ -74,7 +85,8 @@ const UploadPage = function () {
             <TextArea size="large" id="product-description" showCount maxLength={300} placeholder="상품명을 작성해주세요"></TextArea>
           </Form.Item>
           <Form.Item>
-            <Button id="submit-button" htmlType="submit">
+          {contextHolder}
+            <Button id="submit-button" htmlType="submit" onClick={info}>
               상품등록하기
             </Button>
           </Form.Item>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./MainPage.css";
-import {API_URL} from "./config/constants.js";
+import { API_URL } from "./config/constants.js";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -9,9 +9,8 @@ dayjs.extend(relativeTime);
 function MainPage() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    
     axios
-    .get(`${API_URL}/products/`)
+      .get(`${API_URL}/products`)
       .then(function (result) {
         const products = result.data.product;
         setProducts(products);
@@ -22,7 +21,6 @@ function MainPage() {
   }, []);
   return (
     <div>
-      
       <div id="body">
         <div id="banner">
           <img src="images/banners/banner1.png" alt="" />
@@ -30,12 +28,12 @@ function MainPage() {
         <h1>Products</h1>
         <div id="product-list">
           {products.map((product, idx) => {
-           console.log(product);
-           return (
+            console.log(product);
+            return (
               <div className="product-card" key={idx}>
                 <Link className="product-link" to={`/ProductPage/${product.id}`}>
                   <div>
-                    <img className="product-img" src={product.imageUrl} alt={product.name} />
+                    <img className="product-img" src={`${API_URL}/${product.imageUrl}`} alt={product.name} />
                   </div>
                   <div className="product-content">
                     <span className="product-name">{product.name}</span>
@@ -54,7 +52,6 @@ function MainPage() {
           })}
         </div>
       </div>
-      
     </div>
   );
 }

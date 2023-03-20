@@ -4,7 +4,8 @@ import axios from "axios";
 import "./ProductPage.css";
 import dayjs from "dayjs";
 import {API_URL} from "./config/constants.js";
-
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const ProductPage = function () {
   const { id } = useParams();
@@ -12,9 +13,9 @@ const ProductPage = function () {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    
+    let url=`${API_URL}/products/${id}`
     axios
-    .get(`${API_URL}/products/${id}`)
+    .get(url)
       .then(function (result) {
         setProduct(result.data.product);
       })
@@ -44,7 +45,7 @@ const ProductPage = function () {
         메인페이지로 가기
       </button>
       <div id="image-box">
-        <img src={`/${product.imageUrl}`} alt={product.name} />
+        <img src={`${API_URL}/${product.imageUrl}`} alt={product.name} />
       </div>
       <div id="profile-box">
         <img src="/images/icons/avatar.png" alt={product.seller} />
@@ -56,8 +57,8 @@ const ProductPage = function () {
           <div id="name">{product.name}</div>
           <div id="price">{product.price}</div>
           <div id="createAt">2023.03.10</div>
-          <div id="description">{product.desc}</div>
-          <span className="product-date">{dayjs(product.createdAt).format("YY년MM월DD일:HH시MM분ss초")}</span>
+          <pre id="description">{product.description}</pre>
+          <span className="product-date">상품등록일:{dayjs(product.createdAt).format("YY년MM월DD일:HH시MM분ss초")}</span>
       </div>
       </div>
     </div>
