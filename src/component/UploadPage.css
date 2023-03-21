@@ -21,7 +21,7 @@
   font-size: 14px;
   color: rgb(195, 194, 204);
 }
-.upload-name {
+.upload-name,.upload-seller {
   width: 300px;
 }
 #submit-button {

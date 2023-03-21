@@ -5,9 +5,11 @@ import { API_URL } from "./config/constants.js";
 import axios from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Carousel } from "antd";
 dayjs.extend(relativeTime);
 function MainPage() {
   const [products, setProducts] = useState([]);
+  const [banners, setBanners] = useState([]); //기본값을 배열로 할당
   useEffect(() => {
     axios
       .get(`${API_URL}/products`)
@@ -18,19 +20,37 @@ function MainPage() {
       .catch(function (error) {
         console.log(error);
       });
+    axios
+      .get(`${API_URL}/banners`)
+      .then((result) => {
+        const banners = result.data.banners;
+        setBanners(banners);
+      })
+      .catch((error) => {
+        console.error("에러 발생 : ", error);
+      });
   }, []);
   return (
     <div>
       <div id="body">
-        <div id="banner">
-          <img src="images/banners/banner1.png" alt="" />
-        </div>
+        <Carousel autoplay autoplaySpeed={3000}>
+          {banners.map((banner, index) => {
+            return (
+              <Link to={banner.href} key={index}>
+                <div id="banner">
+                  <img src={`${API_URL}/${banner.imageUrl}`} alt="" />
+                </div>
+              </Link>
+            );
+          })}
+        </Carousel>
         <h1>Products</h1>
         <div id="product-list">
           {products.map((product, idx) => {
             console.log(product);
             return (
               <div className="product-card" key={idx}>
+              {product.soldout === 1 ? <div className="product-blur"></div> : null}
                 <Link className="product-link" to={`/ProductPage/${product.id}`}>
                   <div>
                     <img className="product-img" src={`${API_URL}/${product.imageUrl}`} alt={product.name} />
